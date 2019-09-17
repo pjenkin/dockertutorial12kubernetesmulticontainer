@@ -64,7 +64,7 @@ app.post('/values', async (req, res) => {
 
     if (parseInt(index) > 40)
     {
-        return res.status(422).send('Index too high - max 40');
+        return res.status(422).send('Index too high - max 40');         // unprocessable entity
     }
 
     redisClient.hset('values', index, 'Nothing for this value yet!');   // placeholder string to be overwritten if value actually found; hset - hash set for 'values'
