@@ -5,7 +5,7 @@ import axios from 'axios';          // axios to do with requests
 class Fib extends Component {
     state = {
         seenIndexes: [],
-        values: {};
+        values: {},
         index: ''
     };
 
