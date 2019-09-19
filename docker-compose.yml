@@ -46,7 +46,7 @@ services:
       dockerfile: Dockerfile.dev
       context:
         ./worker
-      volumes:
+    volumes:
         - /app/node_modules
         - ./worker:/app
   # nginx router (9-127/123 Building a custom Nginx image)
