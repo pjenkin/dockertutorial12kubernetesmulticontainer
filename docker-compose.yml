@@ -1,7 +1,33 @@
 # 9-121 et seq - Adding Postgres as a service - 
 # this file for all of the project databases & other containers however (eg for redis)
+  # Postgres (1 of 3)
 version: '3'
 services:
   postgres:
     image: 'postgres:latest'
 # possible to test from this line with docker-compose up
+  # Redis (9-122 docker-compose config) (2 of 3)
+  redis:
+    image: 'redis:latest'
+  # Server (3 of 3)
+  server:
+    build:
+      dockerfile: Dockerfile.dev
+      # NB development so Dockerfile 
+      # no folder specified - cf 'context' property (NB not dot (pwd) here) 
+      # ... since docker-compose.yml in root, look from there to /server sub-folder
+      context: ./server
+    volumes:
+      - /app/node_modules
+      - ./server:/app
+      # leave /app/node_modules as-is (no mapping - too much stuff in there!)
+      # ... but do indeed map between /app on container and /server on host system
+      # cf WORDKIR /app in server's Dockerfile.dev
+    environment:
+      - REDIS_HOST=redis    # like a URL to which server should connect (NB as service name, no need to specify actual URL/IP address)
+      - REDIS_PORT=6379     # default is EXPOSE'd 6379 - as in docker hub's redis docs https://hub.docker.com/_/redis#how-to-use-this-image
+      - PGUSER=postgres     # default user, as in docs for image https://hub.docker.com/_/postgres#environment-variables
+      - PGHOST=postgres     # NB name of service in docker-compose.yml in lieu of URL or IP
+      - PGDATABASE=postgres
+      - PGPASSWORD=postgres_password    # said in video 9-123@8:45 to be default password
+      - PGPORT=5432         # default EXPOSE'd port as in docs for image https://hub.docker.com/_/postgres#environment-variables
