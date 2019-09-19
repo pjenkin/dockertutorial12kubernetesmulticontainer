@@ -9,8 +9,8 @@ services:
   # Redis (9-122 docker-compose config) (2 of 3)
   redis:
     image: 'redis:latest'
-  # Server (3 of 3)
-  # server:  # 'server' is a reserved word in nginx default.conf - rename within here (&default.conf) to 'api' (but keep name 'server' on host file system) 9-126/122
+  # Server (3 of 3) 'server' is a reserved word in nginx default.conf - rename within here (&default.conf) to 'api' (but keep name 'server' on host file system) 9-126/122
+  # api (3 of 3) (formerly 'server')
   api:
     build:
       dockerfile: Dockerfile.dev
@@ -34,19 +34,27 @@ services:
       - PGPORT=5432         # default EXPOSE'd port as in docs for image https://hub.docker.com/_/postgres#environment-variables
       # again, can be checked with docker-compose up
   # client (9-124 Worker and Client services)
-    client:
-      build:
-        dockerfile: Dockerfile.dev
-        context: ./client
+  client:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client
+    volumes:
+      - /app/node_modules
+      - ./client:/app
+  worker:
+    build:
+      dockerfile: Dockerfile.dev
+      context:
+        ./worker
       volumes:
         - /app/node_modules
-        - ./client:/app
-    worker:
-      build:
-        dockerfile: Dockerfile.dev
-        context:
-          ./worker
-        volumes::
-          - /app/node_modules
-          - ./worker:/app
-      
+        - ./worker:/app
+  # nginx router (9-127/123 Building a custom Nginx image)
+  nginx:
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev    # NB this is the specifically /nginx/Dockerfile.dev
+      context: ./nginx
+    ports:
+      - '3050:80'
+    # aha! port mapping at last, by nginx router - say (arbitrary) 3050 on host system to 80 on container
