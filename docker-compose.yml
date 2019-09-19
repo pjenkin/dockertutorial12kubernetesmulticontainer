@@ -5,12 +5,13 @@ version: '3'
 services:
   postgres:
     image: 'postgres:latest'
-# possible to test from this line with docker-compose up
+# possible to check from this line with docker-compose up
   # Redis (9-122 docker-compose config) (2 of 3)
   redis:
     image: 'redis:latest'
   # Server (3 of 3)
-  server:
+  # server:  # 'server' is a reserved word in nginx default.conf - rename within here (&default.conf) to 'api' (but keep name 'server' on host file system) 9-126/122
+  api:
     build:
       dockerfile: Dockerfile.dev
       # NB development so Dockerfile 
@@ -20,7 +21,7 @@ services:
     volumes:
       - /app/node_modules
       - ./server:/app
-      # leave /app/node_modules as-is (no mapping - too much stuff in there!)
+      # leave /app/node_modules as-is (no colon:no mapping - too much stuff in there!)
       # ... but do indeed map between /app on container and /server on host system
       # cf WORDKIR /app in server's Dockerfile.dev
     environment:
@@ -31,3 +32,21 @@ services:
       - PGDATABASE=postgres
       - PGPASSWORD=postgres_password    # said in video 9-123@8:45 to be default password
       - PGPORT=5432         # default EXPOSE'd port as in docs for image https://hub.docker.com/_/postgres#environment-variables
+      # again, can be checked with docker-compose up
+  # client (9-124 Worker and Client services)
+    client:
+      build:
+        dockerfile: Dockerfile.dev
+        context: ./client
+      volumes:
+        - /app/node_modules
+        - ./client:/app
+    worker:
+      build:
+        dockerfile: Dockerfile.dev
+        context:
+          ./worker
+        volumes::
+          - /app/node_modules
+          - ./worker:/app
+      
