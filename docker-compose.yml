@@ -1,0 +1,7 @@
+# 9-121 et seq - Adding Postgres as a service - 
+# this file for all of the project databases & other containers however (eg for redis)
+version: '3'
+services:
+  postgres:
+    image: 'postgres:latest'
+# possible to test from this line with docker-compose up
