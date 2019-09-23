@@ -33,9 +33,6 @@ services:
       - PGPASSWORD=postgres_password    # said in video 9-123@8:45 to be default password
       - PGPORT=5432         # default EXPOSE'd port as in docs for image https://hub.docker.com/_/postgres#environment-variables
       # again, can be checked with docker-compose up
-    depends_on:
-      - postgres
-      - redis
   # client (9-124 Worker and Client services)
   client:
     build:
@@ -44,8 +41,6 @@ services:
     volumes:
       - /app/node_modules
       - ./client:/app
-    depends_on:
-      - api
   worker:
     build:
       dockerfile: Dockerfile.dev
@@ -54,13 +49,8 @@ services:
     volumes:
         - /app/node_modules
         - ./worker:/app
-    depends_on:
-      - redis
   # nginx router (9-127/123 Building a custom Nginx image)
   nginx:
-    depends_on:
-      - api
-      - client    # depends_on added as per https://www.udemy.com/docker-and-kubernetes-the-complete-guide/learn/lecture/11437304#questions/7553616
     restart: always
     build:
       dockerfile: Dockerfile.dev    # NB this is the specifically /nginx/Dockerfile.dev
