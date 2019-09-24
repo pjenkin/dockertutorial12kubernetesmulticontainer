@@ -54,6 +54,9 @@ services:
     volumes:
         - /app/node_modules
         - ./worker:/app
+    environment:
+      - REDIS_HOST=redis    # like a URL to which server should connect (NB as service name, no need to specify actual URL/IP address)  cf 9-125 Troubleshooting
+      - REDIS_PORT=6379     # default is EXPOSE'd 6379 - as in docker hub's redis docs https://hub.docker.com/_/redis#how-to-use-this-image
     depends_on:
       - redis
   # nginx router (9-127/123 Building a custom Nginx image)
