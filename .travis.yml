@@ -5,10 +5,9 @@ services:
   - docker
 
 before_install:
-  - docker build -t peternjenkin/react-test -f ./client/Dockerfile.dev ./client
-  
+  - docker build -t peternjenkin/react-test -f ./client/Dockerfile.dev ./client   # NB space after '-' (array)  
   # Build and tag with a name (to use later) and use development (ie with tests) Dockerfile.dev from React client app
-  # ... and use ./client directory as this build context
+  # ... and use ./client directory as this build context 
 
 script:
   - docker run -e CI=true USERNAME/react-test npm test
