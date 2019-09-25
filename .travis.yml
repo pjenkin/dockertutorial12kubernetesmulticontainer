@@ -10,7 +10,7 @@ before_install:
   # ... and use ./client directory as this build context 
 
 script:
-  - docker run -e CI=true USERNAME/react-test npm test
+  - docker run -e CI=true peternjenkin/react-test npm test
   # 10-135 'Fix for failing Travis builds' - set Travis CI variable to not wait for Jest user input 
   # Override default command - NB npm test by default in watch mode indefinitely 
   # Any non-zero exit code from here will be counted as a fail by Travis CI
