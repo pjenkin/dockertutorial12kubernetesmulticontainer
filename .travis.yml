@@ -1,0 +1,33 @@
+# 10-141 Travis configuration setup
+# Test build on Travis using development, not production
+sudo: required
+services:
+  -docker
+
+before_install:
+  -docker build -t peternjenkin/react-test -f ./client/Dockerfile.dev ./client
+  # Build and tag with a name (to use later) and use development (ie with tests) Dockerfile.dev from React client app
+  # ... and use ./client directory as this build context
+
+script:
+  - docker run -e CI=true USERNAME/react-test npm test
+  # 10-135 'Fix for failing Travis builds' - set Travis CI variable to not wait for Jest user input 
+  # Override default command - NB npm test by default in watch mode indefinitely 
+  # Any non-zero exit code from here will be counted as a fail by Travis CI
+
+after_success:
+  - docker build -t peternjenkin/multi-client ./client
+  - docker build -t peternjenkin/multi-nginx ./nginx
+  - docker build -t peternjenkin/multi-server ./server  # NB aka 'api' service
+  - docker build -t peternjenkin/multi-worker ./worker
+  # If development tests are passed, start pushing production build images to Docker Hub (using default Dockerfile)
+  # BTW, for image tag name, 'multi-' chosen as sort of showing tis part of a multi-container project
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # 10-142 Log-in non-interactively for Travis CI - password environment variable piped in to stdin ...
+  # ... of docker login command which d'use user of ID environment variable (previously set-up on Travis CI settings page) ...
+  # ... and tell login that it can expect to receieve the password over stdin
+  - docker push peternjenkin/multi-client
+  - docker push peternjenkin/multi-nginx
+  - docker push peternjenkin/multi-server
+  - docker push peternjenkin/multi-worker
+  # Push images to Docker Hub
