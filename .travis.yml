@@ -25,7 +25,7 @@ after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # 10-142 Log-in non-interactively for Travis CI - password environment variable piped in to stdin ...
   # ... of docker login command which d'use user of ID environment variable (previously set-up on Travis CI settings page) ...
-  # ... and tell login that it can expect to receieve the password over stdin
+  # ... and tell login that it can expect to receive the password over stdin
   - docker push peternjenkin/multi-client
   - docker push peternjenkin/multi-nginx
   - docker push peternjenkin/multi-server
