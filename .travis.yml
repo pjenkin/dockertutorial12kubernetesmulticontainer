@@ -44,5 +44,5 @@ deploy:
   access_key_id:
     secure: $AWS_ACCESS_KEY
   secret_access_key:
-    secure: $AWS_SECRET_KEY
+    secure: $SECRET_ACCESS_KEY
 # 11-159 Travis Deploy Script: all 1 config object for 'deploy', not array, hence no dashes
