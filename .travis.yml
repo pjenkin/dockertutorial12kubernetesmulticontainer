@@ -31,3 +31,18 @@ after_success:
   - docker push peternjenkin/multi-server
   - docker push peternjenkin/multi-worker
   # Push images to Docker Hub
+
+deploy:
+  provider: elasticbeanstalk
+  region: eu-west-1
+  app: multi-docker
+  env: MultiDocker-env
+  bucket_name: elasticbeanstalk-eu-west-1-110366069472
+  bucket_path: docker-multi
+  on:
+    branch: master
+  access_key_id:
+    secure: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: $AWS_SECRET_KEY
+# 11-159 Travis Deploy Script: all 1 config object for 'deploy', not array, hence no dashes
