@@ -17,7 +17,7 @@
         },
         {
             "name" : "worker",
-            "image" : "peternjenkin/multi-server",
+            "image" : "peternjenkin/multi-worker",
             "hostname" : "worker",
             "essential" : false,
             "memory" : 128
