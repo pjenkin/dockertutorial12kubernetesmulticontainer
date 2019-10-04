@@ -11,6 +11,16 @@ class Fib extends Component {
   componentDidMount() {
     this.fetchValues();
     this.fetchIndexes();
+    // try unregistering serviceWorker
+    if ('serviceWorker' in navigator)
+    {
+      var unregistration = navigator.serviceWorker.getRegistration.unregister();
+      console.log('unregistration: ' + unregistration)  ;
+    }
+    else
+    {
+      console.log('serviceWorker not found in navigator')
+    }
   }
 
   async fetchValues() {
